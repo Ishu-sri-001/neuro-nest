@@ -6,7 +6,7 @@ const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_API_KEY || "",
 });
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
 const generateId = () => Math.random().toString(36).slice(2, 15);
 
@@ -24,11 +24,24 @@ const buildGoogleGenAIPrompt = (messages: Message[]): Message[] => [
 ];
 
 export async function POST(request: Request) {
-  const { messages } = await request.json();
-  const stream= await streamText({
-    model: google("gemini-pro"),
-    messages : buildGoogleGenAIPrompt(messages),
-    temperature: 0.7,
-  });
-  return stream?.toDataStreamResponse();
+  try {
+    const { messages } = await request.json();
+    console.log("Received messages:", messages);
+    console.log("Formatted messages:", buildGoogleGenAIPrompt(messages));
+
+    const stream = await streamText({
+      model: google("gemini-pro"),
+      messages: buildGoogleGenAIPrompt(messages),
+      temperature: 0.7,
+    });
+
+    return stream?.toDataStreamResponse();
+  } catch (error) {
+    console.error("Error in /api/gemini:", error);
+    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 }
+
