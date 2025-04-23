@@ -1,22 +1,32 @@
-import { streamText } from "ai";
-import { createOpenAI } from "@ai-sdk/openai";
-import { initialMessage } from "@/lib/data";
-
-const openai = createOpenAI({
-  apiKey: process.env.OPENAI_API_KEY || "",
-  compatibility: "strict", 
-});
-
-export const runtime = "edge";
+import { openai } from '@ai-sdk/openai';
+import { streamText } from 'ai';
+import { initialMessage } from '@/lib/data';
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  try {
+    const { messages } = await req.json();
 
-  const stream = await streamText({
-    model: openai("gpt-4o-mini"),
-    messages: [initialMessage, ...messages],
-    temperature: 1,
-  });
+    if (!Array.isArray(messages)) {
+      return new Response(JSON.stringify({ error: 'Invalid request format' }), { status: 400 });
+    }
 
-  return stream?.toDataStreamResponse();
+    const formattedMessages = [initialMessage, ...messages];
+
+    const result = await streamText({
+      model: openai('gpt-4-turbo'),
+      messages: formattedMessages,
+    });
+
+    return result.toDataStreamResponse();
+  } catch (error) {
+    console.error('🔥 API Error:', error);
+  
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+  
+    return new Response(
+      JSON.stringify({ error: 'Internal Server Error', details: errorMessage }),
+      { status: 500 }
+    );
+  }
 }
+  

@@ -1,5 +1,4 @@
 import { GoogleGenerativeAI } from "@google/generative-ai"
-import { StreamingTextResponse } from "ai"
 import { initialMessage } from "@/lib/data"
 
 const MODEL_NAME = "gemini-1.5-pro"
@@ -31,11 +30,11 @@ export async function POST(req: Request): Promise<Response> {
     if (messages[0]?.role !== "system") {
       formattedMessages.unshift({
         role: "model",
-        parts: [{ text: initialMessage.content }],
-      })
+        parts: [{ text: initialMessage.content }]
+      });
     }
 
-    // Get the response from Gemini
+    // Non-streaming approach - get the full response
     const result = await model.generateContent({
       contents: formattedMessages,
       generationConfig: {
@@ -46,16 +45,12 @@ export async function POST(req: Request): Promise<Response> {
 
     const responseText = result.response.text()
 
-    // Create a stream from the response text
-    const stream = new ReadableStream({
-      async start(controller) {
-        controller.enqueue(new TextEncoder().encode(responseText))
-        controller.close()
+    // Return the response in the format that useChat expects
+    return new Response(responseText, {
+      headers: {
+        "Content-Type": "text/plain",
       },
     })
-
-    // Use StreamingTextResponse from the AI SDK to format the response correctly
-    return new StreamingTextResponse(stream)
   } catch (error) {
     console.error("Error in Gemini API:", error)
 
@@ -64,7 +59,7 @@ export async function POST(req: Request): Promise<Response> {
       JSON.stringify({
         error: error instanceof Error ? error.message : "An unknown error occurred",
       }),
-      { status: 500, headers: { "Content-Type": "application/json" } },
+      { status: 500, headers: { "Content-Type": "application/json" } }
     )
   }
 }
