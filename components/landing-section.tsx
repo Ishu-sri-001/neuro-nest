@@ -2,7 +2,7 @@ export default function LandingSections() {
   return (
     <div className="space-y-24 py-24">
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-12 text-center">
+      <section className="container mx-auto px-4 py-12 text-center" id="home">
         <h1 className="text-4xl md:text-6xl font-bold mb-6">Welcome to NeuroNest</h1>
         <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
           Empowering your digital journey with cutting-edge AI solutions
@@ -11,7 +11,7 @@ export default function LandingSections() {
       </section>
 
       {/* Features Section */}
-      <section className="container mx-auto px-4 py-12">
+      <section className="container mx-auto px-4 py-12" id="features">
         <h2 className="text-3xl font-bold text-center mb-12">Our Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[1, 2, 3].map((i) => (
@@ -26,7 +26,7 @@ export default function LandingSections() {
       </section>
 
       {/* About Section */}
-      <section className="container mx-auto px-4 py-12 bg-gray-50 rounded-lg">
+      <section className="container mx-auto px-4 py-12 bg-gray-50 rounded-lg" id="about">
         <h2 className="text-3xl font-bold text-center mb-8">About Us</h2>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
           NeuroNest is a pioneering AI company dedicated to creating intelligent solutions that transform how businesses
@@ -36,7 +36,7 @@ export default function LandingSections() {
       </section>
 
       {/* Contact Section */}
-      <section className="container mx-auto px-4 py-12">
+      <section className="container mx-auto px-4 py-12" id='contact'>
         <h2 className="text-3xl font-bold text-center mb-8">Get in Touch</h2>
         <div className="max-w-md mx-auto p-6 border rounded-lg shadow-md">
           <p className="text-center mb-6">Have questions? We'd love to hear from you!</p>
