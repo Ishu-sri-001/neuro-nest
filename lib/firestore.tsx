@@ -11,6 +11,7 @@ export interface UserData {
   photoURL?: string | null
   createdAt?: any
   lastLogin?: any
+  credits: number
 }
 
 
@@ -22,6 +23,20 @@ export async function createUserDocument(uid: string, data: Omit<UserData, "uid"
     createdAt: serverTimestamp(),
     lastLogin: serverTimestamp(),
   })
+}
+
+
+export async function updateUserCredits(uid: string, credits: number): Promise<void> {
+  try {
+    // Assuming you have a users collection in Firestore
+    const userRef = doc(db, "users", uid)
+    await updateDoc(userRef, {
+      credits: credits,
+    })
+  } catch (error) {
+    console.error("Error updating user credits:", error)
+    throw error
+  }
 }
 
 

@@ -25,7 +25,7 @@ const debugLog = (message: string, data?: any) => {
   return logMessage
 }
 
-const GUEST_MESSAGE_LIMIT = 2;
+const GUEST_MESSAGE_LIMIT = 10;
 const STORAGE_KEY = 'neuronest_guest_message_count';
 
 export default function Chat() {
@@ -44,7 +44,9 @@ export default function Chat() {
 
   const { messages, input, handleInputChange, handleSubmit: originalHandleSubmit, isLoading, stop, reload, error } = useChat({
     api: "/api/openai",
-    streamProtocol: "text", // Important: Tell useChat to expect plain text
+    // Remove the streamProtocol option to use the default JSON protocol
+    // or set it explicitly to "json" if needed
+    // streamProtocol: "json",
   })
 
   // Load the guest message count from localStorage on initial render

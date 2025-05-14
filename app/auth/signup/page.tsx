@@ -47,6 +47,7 @@ export default function SignUpPage() {
         email: userCredential.user.email,
         firstName: firstName,
         lastName: lastName,
+        credits: 50,
         createdAt: serverTimestamp(),
         lastLogin: serverTimestamp(),
       })
