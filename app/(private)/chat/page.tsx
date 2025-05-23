@@ -14,20 +14,13 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Send, Loader2, AlertCircle, LogIn, StopCircle, RotateCcw, User, Bot } from "lucide-react"
-
-// Storage key for guest users
-const GUEST_MESSAGE_LIMIT = 2
-const STORAGE_KEY = "neuronest_guest_message_count"
+import { Send, Loader2, AlertCircle, StopCircle, RotateCcw, User, Bot, Sparkles } from "lucide-react"
 
 export default function Chat() {
   // User state
   const [user, setUser] = useState<UserData | null>(null)
   const [loading, setLoading] = useState(true)
   const [credits, setCredits] = useState<number | null>(null)
-
-  // Guest user tracking
-  const [guestMessageCount, setGuestMessageCount] = useState(0)
   const [isLimitReached, setIsLimitReached] = useState(false)
 
   // UI refs
@@ -46,13 +39,11 @@ export default function Chat() {
     error,
   } = useChat({
     api: "/api/openai",
-    // Remove the streamProtocol option or set it to the default
-    // streamProtocol: "text",
   })
 
   const auth = getAuth()
 
-  // Load user data and guest message count
+  // Load user data
   useEffect(() => {
     const fetchUserData = async () => {
       if (typeof window !== "undefined") {
@@ -63,14 +54,8 @@ export default function Chat() {
           const userCredits = userData?.credits || 0
           setCredits(userCredits)
 
-          // Only set limit reached if authenticated user has no credits
+          // Set limit reached if authenticated user has no credits
           setIsLimitReached(userCredits <= 0)
-        } else {
-          // For guest users, check local storage
-          const storedCount = localStorage.getItem(STORAGE_KEY)
-          const count = storedCount ? Number.parseInt(storedCount, 10) : 0
-          setGuestMessageCount(count)
-          setIsLimitReached(count >= GUEST_MESSAGE_LIMIT)
         }
 
         setLoading(false)
@@ -95,32 +80,14 @@ export default function Chat() {
     }
   }, [messages])
 
-  // Custom submit handler to track message count and deduct credits
+  // Custom submit handler to deduct credits
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (input.trim() === "") return
 
-    // Handle guest users
-    if (!auth.currentUser) {
-      if (isLimitReached) {
-        return
-      }
-
-      // Increment the message count for unauthenticated users
-      const newCount = guestMessageCount + 1
-      setGuestMessageCount(newCount)
-
-      // Store the updated count in localStorage
-      localStorage.setItem(STORAGE_KEY, newCount.toString())
-
-      // Check if limit is now reached
-      if (newCount >= GUEST_MESSAGE_LIMIT) {
-        setIsLimitReached(true)
-      }
-    }
     // Handle authenticated users with credits
-    else if (user && credits !== null) {
+    if (user && credits !== null) {
       if (credits <= 0) {
         // No credits left
         setIsLimitReached(true)
@@ -144,11 +111,6 @@ export default function Chat() {
     originalHandleSubmit(e)
   }
 
-  // Redirect to login page
-  const redirectToLogin = () => {
-    window.location.href = "/auth/signin"
-  }
-
   // Handle keyboard shortcuts
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -157,8 +119,6 @@ export default function Chat() {
       if (form) form.requestSubmit()
     }
   }
-
-  // Add this function to your component
   const parseRawResponse = (content: string) => {
     // Remove the raw format markers and metadata
     return content
@@ -167,26 +127,35 @@ export default function Chat() {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] max-w-4xl mx-auto">
+    <div className="flex flex-col h-[calc(100vh-4rem)] max-w-4xl mx-auto bg-background rounded-lg shadow-sm border border-purple-500">
       {/* Chat header */}
-      <div className="flex items-center justify-between border-b p-4">
-        <h2 className="text-xl font-semibold">Chat with NeuroNest</h2>
+      <div className="flex items-center justify-between border-b p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/20 dark:to-blue-950/20 rounded-t-lg border border-purple-500">
+        <div className="flex items-center gap-2">
+          <div className="bg-purple-100 dark:bg-purple-900/30 p-2 rounded-full">
+            <Sparkles className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+          </div>
+          <h2 className="text-xl font-semibold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent dark:from-purple-400 dark:to-blue-400">
+            Chat with NeuroNest
+          </h2>
+        </div>
         {!loading && user && (
-          <div className="flex items-center gap-2">
-            <div className="text-sm text-muted-foreground">
-              Credits: <span className="font-medium">{credits}</span>
+          <div className="flex items-center gap-2 bg-white/80 dark:bg-gray-800/50 px-3 py-1.5 rounded-full shadow-sm">
+            <div className="text-sm font-medium">
+              Credits: <span className="text-purple-600 dark:text-purple-400">{credits}</span>
             </div>
           </div>
         )}
       </div>
 
       {/* Chat messages */}
-      <ScrollArea className="flex-1 p-4">
+      <ScrollArea className="flex-1 p-4 overflow-y-auto">
         {messages.length === 0 && !isLimitReached ? (
-          <div className="flex flex-col items-center justify-center h-full text-center gap-2 text-muted-foreground">
-            <Bot className="h-12 w-12 mb-2 opacity-50" />
-            <h3 className="text-lg font-medium">How can I help you today?</h3>
-            <p className="text-sm max-w-md">
+          <div className="flex flex-col items-center justify-center h-full text-center gap-3 p-6">
+            <div className="w-16 h-16 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-2">
+              <Bot className="h-8 w-8 text-purple-600 dark:text-purple-400" />
+            </div>
+            <h3 className="text-xl font-medium">How can I help you today?</h3>
+            <p className="text-sm max-w-md text-muted-foreground">
               Ask me anything about NeuroNest or AI in general. I'm here to assist you.
             </p>
           </div>
@@ -195,17 +164,23 @@ export default function Chat() {
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={cn("flex items-start gap-3", message.role === "user" ? "justify-start" : "justify-start")}
+                className={cn(
+                  "flex items-start gap-4 p-4 rounded-lg transition-colors",
+                  message.role === "user" ? "bg-blue-50 dark:bg-blue-900/10" : "bg-purple-50 dark:bg-purple-900/10",
+                )}
               >
                 <div
                   className={cn(
-                    "flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border",
-                    message.role === "user" ? "bg-background" : "bg-primary/10 border-primary/20",
+                    "flex h-9 w-9 shrink-0 select-none items-center justify-center rounded-full",
+                    message.role === "user"
+                      ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
+                      : "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
                   )}
                 >
-                  {message.role === "user" ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+                  {message.role === "user" ? <User className="h-5 w-5" /> : <Bot className="h-5 w-5" />}
                 </div>
                 <div className={cn("flex-1 space-y-2 overflow-hidden")}>
+                  <div className="text-sm font-medium mb-1">{message.role === "user" ? "You" : "NeuroNest AI"}</div>
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     className="prose prose-sm dark:prose-invert max-w-none"
@@ -217,7 +192,7 @@ export default function Chat() {
                           </code>
                         ) : (
                           <pre
-                            className="bg-muted p-2 rounded-md overflow-x-auto"
+                            className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md overflow-x-auto my-3"
                             {...(props as React.HTMLAttributes<HTMLPreElement>)}
                           >
                             <code className="text-sm">{children}</code>
@@ -242,20 +217,22 @@ export default function Chat() {
             ))}
 
             {isLoading && (
-              <div className="flex items-start gap-3">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 border border-primary/20">
-                  <Bot className="h-4 w-4" />
+              <div className="flex items-start gap-4 p-4 rounded-lg bg-purple-50 dark:bg-purple-900/10">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
+                  <Bot className="h-5 w-5" />
                 </div>
-                <div className="flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Thinking...</span>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin text-purple-600 dark:text-purple-400" />
+                    <span className="text-sm font-medium">Thinking...</span>
+                  </div>
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     size="sm"
                     onClick={() => stop()}
-                    className="h-auto p-1 text-xs text-muted-foreground hover:text-foreground"
+                    className="h-8 border-purple-200 dark:border-purple-800 hover:bg-purple-100 dark:hover:bg-purple-900/30"
                   >
-                    <StopCircle className="h-3 w-3 mr-1" />
+                    <StopCircle className="h-3.5 w-3.5 mr-1" />
                     Stop
                   </Button>
                 </div>
@@ -263,11 +240,19 @@ export default function Chat() {
             )}
 
             {error && (
-              <Alert variant="destructive" className="mt-4">
-                <AlertCircle className="h-4 w-4" />
+              <Alert
+                variant="destructive"
+                className="mt-4 border-red-200 bg-red-50 dark:bg-red-900/10 dark:border-red-800"
+              >
+                <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
                 <AlertDescription className="flex flex-col gap-2">
                   {error.message || "An error occurred connecting to the AI service"}
-                  <Button variant="outline" size="sm" className="w-fit" onClick={() => reload()}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-fit mt-1 border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/30"
+                    onClick={() => reload()}
+                  >
                     <RotateCcw className="h-3 w-3 mr-2" />
                     Retry
                   </Button>
@@ -276,38 +261,21 @@ export default function Chat() {
             )}
 
             {isLimitReached && (
-              <Alert className="bg-amber-50 border-amber-200 mt-4">
+              <Alert className="bg-amber-50 border-amber-200 dark:bg-amber-900/10 dark:border-amber-800 mt-4 rounded-lg">
                 <AlertCircle className="h-5 w-5 text-amber-500" />
                 <AlertDescription className="flex flex-col gap-2">
-                  {auth.currentUser ? (
-                    <>
-                      <p className="font-medium text-amber-800">You've used all your credits</p>
-                      <p className="text-sm text-amber-700">
-                        Please upgrade your plan or purchase more credits to continue chatting
-                      </p>
-                      <Button className="w-fit mt-1" onClick={() => (window.location.href = "/settings/billing")}>
-                        Purchase Credits
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <p className="font-medium text-amber-800">You've reached the guest message limit</p>
-                      <p className="text-sm text-amber-700">Please log in to continue chatting with NeuroNest</p>
-                      <Button onClick={redirectToLogin} className="w-fit mt-1 gap-2">
-                        <LogIn className="size-4" />
-                        Login to continue
-                      </Button>
-                    </>
-                  )}
+                  <p className="font-medium text-amber-800 dark:text-amber-300">You've used all your credits</p>
+                  <p className="text-sm text-amber-700 dark:text-amber-400">
+                    Please upgrade your plan or purchase more credits to continue chatting
+                  </p>
+                  <Button
+                    className="w-fit mt-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
+                    onClick={() => (window.location.href = "/settings/billing")}
+                  >
+                    Purchase Credits
+                  </Button>
                 </AlertDescription>
               </Alert>
-            )}
-
-            {!isLimitReached && !auth.currentUser && guestMessageCount > 0 && (
-              <div className="text-xs text-muted-foreground text-center mt-4">
-                {GUEST_MESSAGE_LIMIT - guestMessageCount} free{" "}
-                {GUEST_MESSAGE_LIMIT - guestMessageCount === 1 ? "message" : "messages"} remaining
-              </div>
             )}
 
             <div ref={scrollRef}></div>
@@ -316,7 +284,7 @@ export default function Chat() {
       </ScrollArea>
 
       {/* Chat input */}
-      <div className="border-t p-4">
+      <div className=" p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/20 dark:to-blue-950/20 rounded-b-lg border border-purple-500">
         <form onSubmit={handleSubmit} className="flex items-end gap-2">
           <div className="relative flex-1">
             <Textarea
@@ -325,14 +293,19 @@ export default function Chat() {
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               placeholder="Type your message here..."
-              className="min-h-[60px] max-h-[200px] pr-12 resize-none"
+              className="min-h-[60px] max-h-[200px] pr-12 resize-none rounded-xl border-purple-400 dark:border-gray-700  "
               disabled={isLoading || isLimitReached}
               rows={1}
             />
             <Button
               type="submit"
               size="icon"
-              className="absolute right-2 bottom-2"
+              className={cn(
+                "absolute right-2 bottom-2 rounded-full h-8 w-8 transition-all",
+                input.trim() === ""
+                  ? "bg-gray-300 dark:bg-gray-700"
+                  : "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700",
+              )}
               disabled={isLoading || isLimitReached || input.trim() === ""}
             >
               <Send className="h-4 w-4" />
@@ -341,20 +314,23 @@ export default function Chat() {
           </div>
         </form>
 
-        {auth.currentUser && credits !== null && (
-          <div className="text-xs text-muted-foreground mt-2">
-            {credits > 0 ? (
-              <>
-                You have <span className="font-medium">{credits}</span> credit{credits !== 1 ? "s" : ""} remaining
-              </>
-            ) : (
-              <>You have no credits remaining</>
-            )}
-          </div>
-        )}
+        <div className="flex justify-between items-center mt-3">
+          {auth.currentUser && credits !== null && (
+            <div className="text-xs text-muted-foreground">
+              {credits > 0 ? (
+                <>
+                  You have <span className="font-medium text-purple-600 dark:text-purple-400">{credits}</span> credit
+                  {credits !== 1 ? "s" : ""} remaining
+                </>
+              ) : (
+                <>You have no credits remaining</>
+              )}
+            </div>
+          )}
 
-        <div className="text-xs text-muted-foreground text-center mt-2">
-          Messages are processed using AI and may not always be accurate
+          <div className="text-xs text-muted-foreground text-right">
+            Messages are processed using AI and may not always be accurate
+          </div>
         </div>
       </div>
     </div>

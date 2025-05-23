@@ -53,7 +53,7 @@ export default function SignUpPage() {
       })
 
       // Redirect to dashboard on success
-      router.push("/dashboard")
+      router.push("/chat")
     } catch (err: any) {
       // Handle authentication errors
       const errorCode = err.code

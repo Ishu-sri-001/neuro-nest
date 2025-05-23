@@ -36,17 +36,8 @@ export default function Chat() {
   const chatIconRef = useRef<HTMLButtonElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  // Use a direct fetch approach as a fallback
-  const [directMessage, setDirectMessage] = useState("")
-  const [directResponse, setDirectResponse] = useState("")
-  const [directLoading, setDirectLoading] = useState(false)
-  const [directError, setDirectError] = useState("")
-
   const { messages, input, handleInputChange, handleSubmit: originalHandleSubmit, isLoading, stop, reload, error } = useChat({
     api: "/api/openai",
-    // Remove the streamProtocol option to use the default JSON protocol
-    // or set it explicitly to "json" if needed
-    // streamProtocol: "json",
   })
 
   // Load the guest message count from localStorage on initial render
@@ -84,28 +75,6 @@ export default function Chat() {
     originalHandleSubmit(e);
   };
 
-  // Direct API test function
-  // const testDirectApi = async () => {
-  //   setDirectLoading(true)
-  //   setDirectError("")
-  //   try {
-  //     const response = await fetch("/api/openai", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         messages: [{ role: "user", content: directMessage || "Hello, how are you?" }],
-  //       }),
-  //     })
-
-  //     const data = await response.text()
-  //     setDirectResponse(data)
-  //   } catch (err) {
-  //     const errorMsg = err instanceof Error ? err.message : String(err)
-  //     setDirectError(errorMsg)
-  //   } finally {
-  //     setDirectLoading(false)
-  //   }
-  // }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -280,13 +249,6 @@ export default function Chat() {
                   </Button>
                 </form>
 
-                {/* Counter display 
-                {!isLimitReached && (
-                  <div className="text-xs text-gray-400 w-full text-center">
-                    {guestMessageCount}/{GUEST_MESSAGE_LIMIT} messages used
-                  </div>
-                )}
-                */}
               </CardFooter>
             </Card>
           </motion.div>

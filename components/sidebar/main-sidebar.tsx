@@ -17,6 +17,7 @@ import {
   BarChartIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  MessageSquare,
   Menu
 } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -52,17 +53,17 @@ export function MainSidebar() {
         <div className="flex h-16 items-center justify-between px-2">
           {!isCollapsed && (
             <Link href="/dashboard" className="flex items-center gap-2">
-              <span className="text-xl font-bold">Neuro Nest</span>
+              <span className="text-xl text-purple-700 font-bold">Neuro Nest</span>
             </Link>
           )}
           {isCollapsed && (
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link href="/dashboard" className="flex h-9 w-9 items-center justify-center rounded-md">
+                <Link href="/chat" className="flex h-9 w-9 items-center justify-center rounded-md">
                   <Menu className="h-6 w-6" />
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right">Neuro Nest</TooltipContent>
+              <TooltipContent className="" side="right">Neuro Nest</TooltipContent>
             </Tooltip>
           )}
           <Button
@@ -77,25 +78,31 @@ export function MainSidebar() {
 
         <div className="space-y-2 py-4">
           <Nav isCollapsed={isCollapsed} links={[
+            // {
+            //   title: "Dashboard",
+            //   href: "/dashboard",
+            //   icon: <HomeIcon className="h-4 w-4" />,
+            //   variant: pathname === "/dashboard" ? "default" : "ghost",
+            // },
+            // {
+            //   title: "Analytics",
+            //   href: "/analytics",
+            //   icon: <BarChartIcon className="h-4 w-4" />,
+            //   variant: pathname === "/analytics" ? "default" : "ghost",
+            // },
+            // {
+            //   title: "Notifications",
+            //   href: "/notifications",
+            //   icon: <BellIcon className="h-4 w-4" />,
+            //   variant: pathname === "/notifications" ? "default" : "ghost",
+            // },
             {
-              title: "Dashboard",
-              href: "/dashboard",
-              icon: <HomeIcon className="h-4 w-4" />,
-              variant: pathname === "/dashboard" ? "default" : "ghost",
+              title: "Chat",
+              href: "/chat",
+              icon: <MessageSquare className="h-4 w-4" />,
+              variant: pathname === "/chat" ? "default" : "ghost",
             },
-            {
-              title: "Analytics",
-              href: "/analytics",
-              icon: <BarChartIcon className="h-4 w-4" />,
-              variant: pathname === "/analytics" ? "default" : "ghost",
-            },
-            {
-              title: "Notifications",
-              href: "/notifications",
-              icon: <BellIcon className="h-4 w-4" />,
-              variant: pathname === "/notifications" ? "default" : "ghost",
-            },
-            {
+             {
               title: "Settings",
               href: "/settings",
               icon: <SettingsIcon className="h-4 w-4" />,
@@ -165,7 +172,7 @@ export function MainSidebar() {
                     <SignOut 
                       // variant="outline" 
                       size="sm" 
-                      className="w-full justify-start"
+                      className="w-full justify-start bg-purple-700"
                     >
                       <LogOutIcon className="mr-2 h-4 w-4" />
                       Sign Out

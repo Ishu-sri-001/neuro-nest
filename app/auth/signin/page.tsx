@@ -38,7 +38,7 @@ export default function SignInPage() {
       await signInWithEmailAndPassword(auth, email, password)
       
       // Redirect to dashboard on success
-      router.push("/dashboard")
+      router.push("/chat")
     } catch (err: any) {
       // Handle authentication errors
       const errorCode = err.code
@@ -145,7 +145,7 @@ export default function SignInPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">Password</Label>
-                  <Link href="/forgot-password" className="text-xs text-primary hover:underline">
+                  <Link href="/auth/forgot-password" className="text-xs text-primary hover:underline">
                     Forgot password?
                   </Link>
                 </div>
