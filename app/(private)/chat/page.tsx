@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Send, Loader2, AlertCircle, StopCircle, RotateCcw, User, Bot, Sparkles } from "lucide-react"
+import PurchaseCreditsModal from "@/components/purchase-modal"; 
 
 export default function Chat() {
   // User state
@@ -22,6 +23,7 @@ export default function Chat() {
   const [loading, setLoading] = useState(true)
   const [credits, setCredits] = useState<number | null>(null)
   const [isLimitReached, setIsLimitReached] = useState(false)
+  const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false) // Add this state
 
   // UI refs
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -119,11 +121,28 @@ export default function Chat() {
       if (form) form.requestSubmit()
     }
   }
+
   const parseRawResponse = (content: string) => {
     // Remove the raw format markers and metadata
     return content
       .replace(/\d+:"([^"]+)"\s*/g, "$1") // Remove the 0:"text" format
       .replace(/e:\{.*\}\s*d:\{.*\}/g, "") // Remove the metadata
+  }
+
+  // Handle credits updated from modal
+  const handleCreditsUpdated = (newCredits: number) => {
+    setCredits(newCredits)
+    setIsLimitReached(newCredits <= 0)
+    
+    // Update user state as well
+    if (user) {
+      setUser({ ...user, credits: newCredits })
+    }
+  }
+
+  // Handle purchase button click
+  const handlePurchaseClick = () => {
+    setIsPurchaseModalOpen(true)
   }
 
   return (
@@ -270,7 +289,7 @@ export default function Chat() {
                   </p>
                   <Button
                     className="w-fit mt-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
-                    onClick={() => (window.location.href = "/settings/billing")}
+                    onClick={handlePurchaseClick}
                   >
                     Purchase Credits
                   </Button>
@@ -333,6 +352,13 @@ export default function Chat() {
           </div>
         </div>
       </div>
+
+      {/* Purchase Credits Modal */}
+      <PurchaseCreditsModal
+        isOpen={isPurchaseModalOpen}
+        onClose={() => setIsPurchaseModalOpen(false)}
+        onCreditsUpdated={handleCreditsUpdated}
+      />
     </div>
   )
 }

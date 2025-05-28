@@ -92,6 +92,7 @@ export default function SignUpPage() {
           email: user.email,
           displayName: user.displayName,
           photoURL: user.photoURL,
+          credits: 50,
           createdAt: serverTimestamp(),
           lastLogin: serverTimestamp(),
         })

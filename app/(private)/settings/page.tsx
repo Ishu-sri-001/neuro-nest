@@ -13,6 +13,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle, CheckCircle2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import PurchaseCreditsModal from "@/components/purchase-modal";
+
+interface CreditPlan {
+  amount: number
+  price: string
+  popular: boolean
+}
 
 export default function SettingsPage() {
   const [user, setUser] = useState<UserData | null>(null)
@@ -25,8 +32,16 @@ export default function SettingsPage() {
   const [lastName, setLastName] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+  const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false)
+  const [selectedPlan, setSelectedPlan] = useState<CreditPlan | undefined>(undefined)
   const auth = getAuth()
   const { toast } = useToast()
+
+  const creditPlans: CreditPlan[] = [
+    { amount: 35, price: "$10", popular: false },
+    { amount: 100, price: "$45", popular: true },
+    { amount: 300, price: "$80", popular: false },
+  ]
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -138,6 +153,17 @@ export default function SettingsPage() {
     } finally {
       setSaving(false)
     }
+  }
+
+  const handlePurchaseClick = (plan: CreditPlan) => {
+    setSelectedPlan(plan)
+    setIsPurchaseModalOpen(true)
+  }
+
+  const handleCreditsUpdated = (newCredits: number) => {
+    setUser((prevUser) => 
+      prevUser ? { ...prevUser, credits: newCredits } : prevUser
+    )
   }
 
   if (loading) {
@@ -272,14 +298,13 @@ export default function SettingsPage() {
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                  {[
-                    { amount: 100, price: "$10", popular: false },
-                    { amount: 500, price: "$45", popular: true },
-                    { amount: 1000, price: "$80", popular: false },
-                  ].map((plan) => (
+                  {creditPlans.map((plan) => (
                     <Card
                       key={plan.amount}
-                      className={`relative overflow-hidden ${plan.popular ? "border-primary" : ""}`}
+                      className={`relative overflow-hidden cursor-pointer hover:shadow-md transition-shadow ${
+                        plan.popular ? "border-primary" : ""
+                      }`}
+                      onClick={() => handlePurchaseClick(plan)}
                     >
                       {plan.popular && (
                         <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-bl-md">
@@ -319,6 +344,13 @@ export default function SettingsPage() {
           <AlertDescription>{success}</AlertDescription>
         </Alert>
       )}
+
+      <PurchaseCreditsModal
+        isOpen={isPurchaseModalOpen}
+        onClose={() => setIsPurchaseModalOpen(false)}
+        selectedPlan={selectedPlan}
+        onCreditsUpdated={handleCreditsUpdated}
+      />
     </div>
   )
 }
