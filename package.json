@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "install": "npm install --legacy-peer-deps"
+     "bootstrap": "npm install && echo \"✅ dependencies installed\""
   },
   "dependencies": {
     "@ai-sdk/google": "^0.0.55",
