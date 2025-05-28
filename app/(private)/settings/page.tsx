@@ -149,7 +149,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="container max-w-4xl py-8">
+    <div className="container max-w-4xl">
       <h1 className="text-3xl font-bold mb-6">Settings</h1>
 
       <Tabs defaultValue="profile" className="w-full">
