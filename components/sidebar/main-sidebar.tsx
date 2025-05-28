@@ -84,18 +84,6 @@ export function MainSidebar() {
             //   icon: <HomeIcon className="h-4 w-4" />,
             //   variant: pathname === "/dashboard" ? "default" : "ghost",
             // },
-            // {
-            //   title: "Analytics",
-            //   href: "/analytics",
-            //   icon: <BarChartIcon className="h-4 w-4" />,
-            //   variant: pathname === "/analytics" ? "default" : "ghost",
-            // },
-            // {
-            //   title: "Notifications",
-            //   href: "/notifications",
-            //   icon: <BellIcon className="h-4 w-4" />,
-            //   variant: pathname === "/notifications" ? "default" : "ghost",
-            // },
             {
               title: "Chat",
               href: "/chat",

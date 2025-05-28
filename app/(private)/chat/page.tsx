@@ -156,7 +156,7 @@ export default function Chat() {
             </div>
             <h3 className="text-xl font-medium">How can I help you today?</h3>
             <p className="text-sm max-w-md text-muted-foreground">
-              Ask me anything about NeuroNest or AI in general. I'm here to assist you.
+              Ask me anything about NeuroNest or AI in general. I&apos;m here to assist you.
             </p>
           </div>
         ) : (
@@ -264,7 +264,7 @@ export default function Chat() {
               <Alert className="bg-amber-50 border-amber-200 dark:bg-amber-900/10 dark:border-amber-800 mt-4 rounded-lg">
                 <AlertCircle className="h-5 w-5 text-amber-500" />
                 <AlertDescription className="flex flex-col gap-2">
-                  <p className="font-medium text-amber-800 dark:text-amber-300">You've used all your credits</p>
+                  <p className="font-medium text-amber-800 dark:text-amber-300">You&apos;ve used all your credits</p>
                   <p className="text-sm text-amber-700 dark:text-amber-400">
                     Please upgrade your plan or purchase more credits to continue chatting
                   </p>

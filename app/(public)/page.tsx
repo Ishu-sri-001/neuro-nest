@@ -18,12 +18,6 @@ import { useChat } from "ai/react"
 
 import LandingSections from "@/components/landing-section"
 
-// Simple function to log to both console and UI
-const debugLog = (message: string, data?: any) => {
-  const logMessage = data ? `${message}: ${JSON.stringify(data, null, 2)}` : message
-  console.log(logMessage)
-  return logMessage
-}
 
 const GUEST_MESSAGE_LIMIT = 10;
 const STORAGE_KEY = 'neuronest_guest_message_count';
@@ -194,7 +188,7 @@ export default function Chat() {
                       <Alert className="bg-amber-50 border-amber-200">
                         <AlertCircle className="h-5 w-5 text-amber-500" />
                         <AlertDescription className="text-center">
-                          <p className="font-medium text-amber-800">You've reached the guest message limit</p>
+                          <p className="font-medium text-amber-800">You`&apos;ve reached the guest message limit</p>
                           <p className="text-sm text-amber-700 mt-1">Please log in to continue chatting with NeuroNest</p>
                         </AlertDescription>
                       </Alert>

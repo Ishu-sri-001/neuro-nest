@@ -14,7 +14,7 @@ export default function LandingSections() {
   {
     id: 3,
     title: "24/7 Personalized Support",
-    description: "Unlike traditional therapy with scheduled appointments, NeuroNest is available whenever you need it. Our AI learns from your interactions to provide increasingly personalized guidance, coping strategies, and emotional support that grows more effective over time, ensuring you're never alone in your mental health journey."
+    description: "Unlike traditional therapy with scheduled appointments, NeuroNest is available whenever you need it. Our AI learns from your interactions to provide increasingly personalized guidance, coping strategies, and emotional support that grows more effective over time, ensuring you&apos;re never alone in your mental health journey."
   }
 ];
 
@@ -97,10 +97,10 @@ export default function LandingSections() {
               About Us
             </h2>
             <div className="text-lg md:text-xl text-gray-700 text-center max-w-4xl mx-auto space-y-6 leading-relaxed">
-              <p className="text-xl font-medium">At NeuroNest, we believe mental health support shouldn't be limited by appointments, waiting lists, or location. We've created more than just a chatbot – we've built a digital companion that truly listens, learns, and cares.</p>
-              <p>Our mission is to make quality mental health support accessible to everyone, everywhere, at any time. Emotional struggles don't follow a 9-to-5 schedule, and neither should your support. That's why we've developed an AI therapist that combines advanced natural language processing with evidence-based therapeutic techniques.</p>
-              <p>NeuroNest provides a judgment-free space where you can explore your thoughts, process emotions, and find your path to wellness. We're here to listen when you need to talk, guide when you feel lost, and support your journey toward better mental health.</p>
-              <p className="text-xl font-semibold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Your wellbeing matters. At NeuroNest, you're never alone.</p>
+              <p className="text-xl font-medium">At NeuroNest, we believe mental health support shouldn&apos;t be limited by appointments, waiting lists, or location. We&apos;ve created more than just a chatbot – we&apos;ve built a digital companion that truly listens, learns, and cares.</p>
+              <p>Our mission is to make quality mental health support accessible to everyone, everywhere, at any time. Emotional struggles don&apos;t follow a 9-to-5 schedule, and neither should your support. That&apos;s why we&apos;ve developed an AI therapist that combines advanced natural language processing with evidence-based therapeutic techniques.</p>
+              <p>NeuroNest provides a judgment-free space where you can explore your thoughts, process emotions, and find your path to wellness. We&apos;re here to listen when you need to talk, guide when you feel lost, and support your journey toward better mental health.</p>
+              <p className="text-xl font-semibold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Your wellbeing matters. At NeuroNest, you&apos;re never alone.</p>
             </div>
           </div>
         </div>
@@ -114,7 +114,7 @@ export default function LandingSections() {
         <div className="max-w-lg mx-auto bg-white p-10 border-2 border-gray-100 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500"></div>
           
-          <p className="text-center mb-8 text-xl text-gray-700 font-medium">Have questions? We'd love to hear from you!</p>
+          <p className="text-center mb-8 text-xl text-gray-700 font-medium">Have questions? We&apos;d love to hear from you!</p>
           <div className="space-y-6">
             <div className="flex items-center justify-center bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-xl">
               <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center mr-4">

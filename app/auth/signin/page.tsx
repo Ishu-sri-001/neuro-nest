@@ -37,7 +37,7 @@ export default function SignInPage() {
       // Sign in with email/password
       await signInWithEmailAndPassword(auth, email, password)
       
-      // Redirect to dashboard on success
+      // Redirect to chat on success
       router.push("/chat")
     } catch (err: any) {
       // Handle authentication errors
@@ -212,7 +212,7 @@ export default function SignInPage() {
 
           <CardFooter className="flex justify-center">
             <p className="text-sm text-muted-foreground">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link href="/auth/signup">
                 <Button variant="link" className="p-0 h-auto">
                   Sign up
