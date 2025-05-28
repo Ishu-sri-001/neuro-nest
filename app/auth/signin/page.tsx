@@ -89,8 +89,8 @@ export default function SignInPage() {
         )
       }
 
-      // Redirect to dashboard on success
-      router.push("/dashboard")
+      // Redirect to chat on success
+      router.push("/chat")
     } catch (err: any) {
       setError("Google authentication failed. Please try again.")
       console.error(err)
